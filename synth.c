@@ -2,12 +2,25 @@
 
 void	choose_waveform(float *wavetable, char *waveform)
 {
+	int	i; 
+	
+	i = 0;
 	if(strcmp(waveform, "sine") == 0)
 	{
-		int i = 0;
 		while(i < TABLE_SIZE)
 		{
 			wavetable[i] = sin(2.0 * M_PI * (double)i / (double)TABLE_SIZE);
+			i++;	
+		}
+	}
+	if(strcmp(waveform, "square") == 0)
+	{
+		while(i < TABLE_SIZE)
+		{
+			if(i <= TABLE_SIZE / 2)
+				wavetable[i] = 1.0;
+			else
+				wavetable[i] = -1.0;
 			i++;	
 		}
 	}
@@ -55,7 +68,7 @@ int	main(void)
 {
 	t_synth *synth1;
 	
-	synth1 = create_synth("sine", note_to_freq("c4"));
+	synth1 = create_synth("square", note_to_freq("c4"));
 	Pa_Initialize();
 	PaStream *stream;
 	Pa_OpenDefaultStream(&stream, 0, 1, paFloat32, SAMPLE_RATE, FRAMES_PER_BUFFER, paCallback, synth1);
