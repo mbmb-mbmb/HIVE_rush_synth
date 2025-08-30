@@ -25,9 +25,9 @@ typedef struct s_ntof
 {
 	char	*note;
 	double	freq;
-} t_ntof;
+}	t_ntof;
 
-void	set_note(t_synth *synth, char *note);
+void	set_note(t_synth *synth, char *note, double amplitude);
 double	note_to_freq(char *note);
 
 #endif

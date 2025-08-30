@@ -52,9 +52,10 @@ double	note_to_freq(char *note)
 	return (0.0);
 }
 
-void	set_note(t_synth *synth, char *note)
+void	set_note(t_synth *synth, char *note, double amplitude)
 {
 	double	freq = note_to_freq(note);
 	synth->frequency = freq;
 	synth->phaseIncrement = freq / SAMPLE_RATE;
+	synth->amplitude = amplitude;
 }

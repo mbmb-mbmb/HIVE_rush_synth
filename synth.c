@@ -26,13 +26,13 @@ void	choose_waveform(float *wavetable, const char *waveform)
 	}
 }
 
-t_synth* create_synth(const char *waveform, double freq)
+t_synth* create_synth(const char *waveform, double freq, double amplitude)
 {
 	t_synth *synth = malloc(sizeof(t_synth));
 	synth->wavetable = malloc(TABLE_SIZE * sizeof(float));
 	synth->phase = 0.0;
 	synth->phaseIncrement = freq / SAMPLE_RATE;
-	synth->amplitude = 0.5;
+	synth->amplitude = amplitude;
 	synth->frequency = freq;
 	choose_waveform(synth->wavetable, waveform);
 	return synth;
@@ -55,7 +55,7 @@ static int paCallback(const void *inputBuffer, void *outputBuffer,
 	while(i < framesPerBuffer)
 	{
 		int idx = (int)(data->phase * TABLE_SIZE) % TABLE_SIZE;
-		*out++ = data->wavetable[idx];
+		*out++ = (data->wavetable[idx] * data->amplitude);
 		data->phase += data->phaseIncrement;
 		if(data->phase >= 1.0)
 			data->phase -= 1.0;
@@ -67,26 +67,28 @@ static int paCallback(const void *inputBuffer, void *outputBuffer,
 int	main(void)
 {
 	t_synth *synth1;
+	// t_synth *synth2;
 
-	synth1 = create_synth("sine", note_to_freq("c4"));
+	synth1 = create_synth("sine", note_to_freq("c4"), 0.5);
+	// synth2 = create_synth("square", note_to_freq("c4"));
 	Pa_Initialize();
 	PaStream *stream;
 	Pa_OpenDefaultStream(&stream, 0, 1, paFloat32, SAMPLE_RATE, FRAMES_PER_BUFFER, paCallback, synth1);
 	Pa_StartStream(stream);
 	Pa_Sleep(1000);
-	set_note(synth1, "g3");
+	set_note(synth1, "g3", 0.5);
 	Pa_Sleep(1000);
-	set_note(synth1, "c4");
+	set_note(synth1, "c4", 0.5);
 	Pa_Sleep(1000);
-	set_note(synth1, "d4");
+	set_note(synth1, "d4", 0.5);
 	Pa_Sleep(1000);
-	set_note(synth1, "e4");
+	set_note(synth1, "e4", 0.5);
 	Pa_Sleep(1500);
-	set_note(synth1, "g4");
+	set_note(synth1, "g4", 0.5);
 	Pa_Sleep(500);
-	set_note(synth1, "e4");
+	set_note(synth1, "e4", 0.5);
 	Pa_Sleep(1000);
-	set_note(synth1, "d4");
+	set_note(synth1, "d4", 0.5);
 	Pa_Sleep(1000);
 	Pa_StopStream(stream);
 	Pa_CloseStream(stream);

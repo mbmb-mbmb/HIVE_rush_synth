@@ -3,11 +3,11 @@ CC = cc
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-    CFLAGS = -Wall -Wextra -I/opt/homebrew/include
-    LDFLAGS = -L/opt/homebrew/lib -lportaudio -lm
+	CFLAGS = -Wall -Wextra -I/opt/homebrew/include
+	LDFLAGS = -L/opt/homebrew/lib -lportaudio -lm
 else
-    CFLAGS = -Wall -Wextra -I.
-    LDFLAGS = libportaudio.a -lrt -lm -lasound -ljack -pthread
+	CFLAGS = -Wall -Wextra -I.
+	LDFLAGS = libportaudio.a -lrt -lm -lasound -ljack -pthread
 endif
 
 SRCS = synth.c \
