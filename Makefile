@@ -1,7 +1,7 @@
 NAME = synth
 CC = cc
-CFLAGS = -Wall -Wextra -I/opt/homebrew/include
-LDFLAGS = -L/opt/homebrew/lib -lportaudio -lm
+CFLAGS = -Wall -Wextra -I
+LDFLAGS = -L. -lportaudio -lasound -lm -lpthread
 
 SRCS = synth.c \
 		set_note.c

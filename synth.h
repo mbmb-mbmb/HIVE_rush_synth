@@ -1,7 +1,8 @@
 #ifndef SYNTH_H
 #define SYNTH_H
 
-#include "/opt/homebrew/include/portaudio.h"
+//#include "/opt/homebrew/include/portaudio.h"
+#include "portaudio.h"
 #include <math.h>
 #include <unistd.h>
 #include <stdio.h>
