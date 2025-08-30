@@ -2,15 +2,15 @@
 
 void	choose_waveform(float *wavetable, const char *waveform)
 {
-	int	i; 
-	
+	int	i;
+
 	i = 0;
 	if(strcmp(waveform, "sine") == 0)
 	{
 		while(i < TABLE_SIZE)
 		{
 			wavetable[i] = sin(2.0 * M_PI * (double)i / (double)TABLE_SIZE);
-			i++;	
+			i++;
 		}
 	}
 	if(strcmp(waveform, "square") == 0)
@@ -21,7 +21,7 @@ void	choose_waveform(float *wavetable, const char *waveform)
 				wavetable[i] = 1.0;
 			else
 				wavetable[i] = -1.0;
-			i++;	
+			i++;
 		}
 	}
 }
@@ -47,7 +47,7 @@ void destroy_synth(t_synth *synth)
 static int paCallback(const void *inputBuffer, void *outputBuffer,
 	unsigned long framesPerBuffer,
 	const PaStreamCallbackTimeInfo* timeInfo,
-	PaStreamCallbackFlags statusFlags, void *userData) 
+	PaStreamCallbackFlags statusFlags, void *userData)
 {
 	t_synth *data = (t_synth*)userData;
 	float *out = (float*)outputBuffer;
@@ -67,8 +67,8 @@ static int paCallback(const void *inputBuffer, void *outputBuffer,
 int	main(void)
 {
 	t_synth *synth1;
-	
-	synth1 = create_synth("square", note_to_freq("c4"));
+
+	synth1 = create_synth("sine", note_to_freq("c4"));
 	Pa_Initialize();
 	PaStream *stream;
 	Pa_OpenDefaultStream(&stream, 0, 1, paFloat32, SAMPLE_RATE, FRAMES_PER_BUFFER, paCallback, synth1);

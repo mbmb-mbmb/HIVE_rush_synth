@@ -1,0 +1,6 @@
+{
+	"files.associations": {
+		"synth.h": "c",
+		"math.h": "c"
+	}
+}

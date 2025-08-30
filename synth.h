@@ -9,9 +9,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define SAMPLE_RATE   48000
-#define FRAMES_PER_BUFFER 256
-#define TABLE_SIZE    2048
+#define SAMPLE_RATE			48000
+#define FRAMES_PER_BUFFER	256
+#define TABLE_SIZE			2048
 
 typedef struct s_synth{
 	double	phase;

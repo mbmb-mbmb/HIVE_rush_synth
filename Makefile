@@ -7,7 +7,7 @@ ifeq ($(UNAME_S),Darwin)
     LDFLAGS = -L/opt/homebrew/lib -lportaudio -lm
 else
     CFLAGS = -Wall -Wextra -I.
-    LDFLAGS = -L. -lportaudio -lm
+    LDFLAGS = libportaudio.a -lrt -lm -lasound -ljack -pthread
 endif
 
 SRCS = synth.c \
