@@ -52,27 +52,11 @@ double	note_to_freq(char *note)
 	return (0.0);
 }
 
-void	synth_to_mix(t_synth *synth, float *mix_buffer)
-{
-	int	i;
 
-	i = 0;
-	while(i < FRAMES_PER_BUFFER)
-	{
-		int wt_idx = (int)(synth->phase * TABLE_SIZE) % TABLE_SIZE;
-		*mix_buffer++ = (synth->wavetable[wt_idx] * synth->amplitude);
-		synth->phase += synth->phaseIncrement;
-		if(synth->phase >= 1.0)
-			synth->phase -= 1.0;
-		i++;
-	}
-}
-
-void	set_note(t_synth *synth, float *mix_buffer, char *note, double amplitude)
+void	set_note(t_synth *synth, char *note, double amplitude)
 {
 	double	freq = note_to_freq(note);
 	synth->frequency = freq;
 	synth->phaseIncrement = freq / SAMPLE_RATE;
 	synth->amplitude = amplitude;
-	synth_to_mix(synth, mix_buffer);
 }
