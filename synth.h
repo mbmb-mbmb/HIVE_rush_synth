@@ -12,8 +12,10 @@
 #define SAMPLE_RATE			48000
 #define FRAMES_PER_BUFFER	256
 #define TABLE_SIZE			2048
+#define NUM_VOICES			3
 
-typedef struct s_synth{
+typedef struct s_synth
+{
 	double	phase;
 	double	phaseIncrement;
 	float	*wavetable;
@@ -27,7 +29,7 @@ typedef struct s_ntof
 	double	freq;
 }	t_ntof;
 
-void	set_note(t_synth *synth, char *note, double amplitude);
+void	set_note(t_synth *synth, float *mix_buffer, char *note, double amplitude);
 double	note_to_freq(char *note);
 
 #endif
