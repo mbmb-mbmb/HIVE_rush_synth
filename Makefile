@@ -1,20 +1,10 @@
 NAME = synth
 CC = cc
 CFLAGS = -Wall -Wextra -I
-LDFLAGS = -L. -lportaudio -lasound -lm -lpthread
+LDFLAGS = -L. -lportaudio -lm -lpthread
 
 SRCS = synth.c \
 		set_note.c
-
-OBJS = $(SRCS:.c=.o)
-
-all: $(NAME)
-
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $(NAME)
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
 
 OBJS = $(SRCS:.c=.o)
 

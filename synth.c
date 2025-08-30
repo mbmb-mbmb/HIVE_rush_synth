@@ -1,6 +1,6 @@
 #include "synth.h"
 
-void	choose_waveform(float *wavetable, char *waveform)
+void	choose_waveform(float *wavetable, const char *waveform)
 {
 	int	i; 
 	
