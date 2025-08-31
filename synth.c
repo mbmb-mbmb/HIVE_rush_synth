@@ -1,6 +1,6 @@
 #include "synth.h"
 
-t_synth	*create_synth(const char *waveform)
+t_synth	*create_synth(t_track_type waveform_type)
 {
 	t_synth	*synth;
 
@@ -10,22 +10,22 @@ t_synth	*create_synth(const char *waveform)
 	synth->phaseIncrement = 0.1;
 	synth->amplitude = 0.0;
 	synth->frequency = 0.1;
-	choose_waveform(synth->wavetable, waveform);
+	choose_waveform(synth->wavetable, waveform_type);
 	return (synth);
 }
 
-t_synth	*create_synth_from_type(char *type)
+t_synth	*create_synth_from_type(t_track_type type)
 {
-	if (strcmp(type, "sine") == 0)
-		return create_synth("sine");
-	else if (strcmp(type, "square") == 0)
-		return create_synth("square");
-	else if (strcmp(type, "triangle") == 0)
-		return create_synth("triangle");
-	else if (strcmp(type, "saw") == 0)
-		return create_synth("saw");
+	if (type == SINE)
+		return create_synth(SINE);
+	else if (type == SQUARE)
+		return create_synth(SQUARE);
+	else if (type == TRIANGLE)
+		return create_synth(TRIANGLE);
+	else if (type == SAW)
+		return create_synth(SAW);
 	else
-		return create_synth("sine");
+		return create_synth(SINE);
 }
 
 void	render_synth_to_buffer(t_synth *synth, t_mixer *mixer)
@@ -77,7 +77,7 @@ int	main(void)
 	t_synth *synth;
 	// from parsing:
 	num_voices = NUM_VOICES;
-	char	*track_types[] = {"sine", "square", "triangle", "saw"};
+	t_track_type track_types[] = {SINE, SQUARE, TRIANGLE, SAW};
 
 
 	t_mixer *mixer = create_mixer(num_voices);
@@ -87,7 +87,7 @@ int	main(void)
 	i = 0;
 	while(i < num_voices)
 	{
-		synth = create_synth_from_type(track_types[i]);
+		synth = create_synth(track_types[i]);
 		add_synth_to_mixer(mixer, synth, i);
  		i++;
 	}

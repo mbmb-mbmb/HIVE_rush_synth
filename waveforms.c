@@ -52,14 +52,14 @@ static void generate_saw(float *wavetable)
 	}
 }
 
-void	choose_waveform(float *wavetable, const char *waveform)
+void	choose_waveform(float *wavetable, t_track_type waveform_type)
 {
-	if(strcmp(waveform, "sine") == 0)
+	if(waveform_type == SINE)
 		generate_sine(wavetable);
-	if(strcmp(waveform, "square") == 0)
+	else if(waveform_type == SQUARE)
 		generate_square(wavetable);
-	if(strcmp(waveform, "triangle") == 0)
+	else if(waveform_type == TRIANGLE)
 		generate_triangle(wavetable);
-	if(strcmp(waveform, "saw") == 0)
+	else if(waveform_type == SAW)
 		generate_saw(wavetable);
 }
