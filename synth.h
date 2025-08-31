@@ -27,8 +27,7 @@ typedef struct s_mixer
 {
 	float	*mixbuffer;
 	int		num_voices;
-	t_synth	*one_synth;
-	t_synth *second_synth;
+	t_synth	**synths;
 }	t_mixer;
 
 typedef struct s_ntof

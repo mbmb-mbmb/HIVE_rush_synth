@@ -40,16 +40,20 @@ t_synth	*create_synth(const char *waveform)
 	return (synth);
 }
 
-t_mixer	*create_mixer(t_synth *synth1, t_synth *synth2)
+t_mixer	*create_mixer(int num_voices)
 {
 	t_mixer	*mixer = malloc(sizeof(t_mixer));
 	mixer->mixbuffer = malloc(FRAMES_PER_BUFFER * sizeof(float));
-	mixer->num_voices = 1;
-	mixer->one_synth = synth1;
-	mixer->second_synth = synth2;
+	mixer->num_voices = num_voices;
+	mixer->synths = malloc(num_voices * sizeof(t_synth*));
 	return (mixer);
 }
 
+void	add_synth_to_mixer(t_mixer *mixer, t_synth *synth, int voice_index)
+{
+	if(voice_index < mixer->num_voices)
+		mixer->synths[voice_index] = synth;
+}
 void	destroy_synth(t_synth *synth)
 {
 	free(synth->wavetable);
@@ -59,6 +63,7 @@ void	destroy_synth(t_synth *synth)
 void	destroy_mixer(t_mixer *mixer)
 {
 	free(mixer->mixbuffer);
+	free(mixer->synths);
 	free(mixer);
 }
 
@@ -92,21 +97,28 @@ static int paCallback(const void *inputBuffer, void *outputBuffer,
 
 	mixer = (t_mixer*)userData;
 	out = (float*)outputBuffer;
-	i = 0;
 	memset(mixer->mixbuffer, 0, framesPerBuffer * sizeof(float));
-	synth_to_mix_with_pitch(mixer->one_synth, mixer);
-	synth_to_mix_with_pitch(mixer->second_synth, mixer);
+	i = 0;
+	while(i < mixer->num_voices)
+	{
+		if(mixer->synths[i] != NULL)
+			synth_to_mix_with_pitch(mixer->synths[i], mixer);
+		i++;
+	}
 	memcpy(out, mixer->mixbuffer, framesPerBuffer * sizeof(float));
 	return (paContinue);
 }
 
 int	main(void)
 {
-	t_synth *synth1 = create_synth("square");
-	t_synth	*synth2 = create_synth("sine");
-	t_mixer *mixer = create_mixer(synth1, synth2);
-
-
+	t_mixer *mixer = create_mixer(NUM_VOICES);
+	t_synth	*synth1 = create_synth("sine");
+	t_synth	*synth2 = create_synth("square");
+	
+	// Add synths to mixer - THIS IS REQUIRED!
+	add_synth_to_mixer(mixer, synth1, 0);
+	add_synth_to_mixer(mixer, synth2, 1);
+	
 	Pa_Initialize();
 	PaStream	*stream;
 
