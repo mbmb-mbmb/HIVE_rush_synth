@@ -39,7 +39,7 @@ void	render_synth_to_buffer(t_synth *synth, t_mixer *mixer)
 	{
 		int wt_idx = (int)(synth->phase * TABLE_SIZE) % TABLE_SIZE;
 		*output_buffer += synth->wavetable[wt_idx] * synth->amplitude * (1.0f / (float) NUM_VOICES);
-		output_buffer++; 
+		output_buffer++;
 		synth->phase += synth->phaseIncrement;
 		if(synth->phase >= 1.0)
 			synth->phase -= 1.0;
@@ -52,6 +52,10 @@ static int paCallback(const void *inputBuffer, void *outputBuffer,
 	const PaStreamCallbackTimeInfo* timeInfo,
 	PaStreamCallbackFlags statusFlags, void *userData)
 {
+	(void)inputBuffer;
+	(void)timeInfo;
+	(void)statusFlags;
+	
 	t_mixer	*mixer;
 	float	*out;
 	int		i;
@@ -83,7 +87,7 @@ int	main(void)
 	t_mixer *mixer = create_mixer(num_voices);
 	Pa_Initialize();
 	PaStream	*stream;
-	
+
 	i = 0;
 	while(i < num_voices)
 	{
