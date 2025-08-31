@@ -26,26 +26,27 @@ void	choose_waveform(float *wavetable, const char *waveform)
 	}
 }
 
-t_synth	*create_synth(const char *waveform, double freq, double amplitude)
+t_synth	*create_synth(const char *waveform)
 {
 	t_synth	*synth;
 
 	synth = malloc(sizeof(t_synth));
 	synth->wavetable = malloc(TABLE_SIZE * sizeof(float));
 	synth->phase = 0.0;
-	synth->phaseIncrement = freq / SAMPLE_RATE;
-	synth->amplitude = amplitude;
-	synth->frequency = freq;
+	synth->phaseIncrement = 0.1;
+	synth->amplitude = 0.0;
+	synth->frequency = 0.1;
 	choose_waveform(synth->wavetable, waveform);
 	return (synth);
 }
 
-t_mixer	*create_mixer(t_synth *synth1)
+t_mixer	*create_mixer(t_synth *synth1, t_synth *synth2)
 {
 	t_mixer	*mixer = malloc(sizeof(t_mixer));
 	mixer->mixbuffer = malloc(FRAMES_PER_BUFFER * sizeof(float));
 	mixer->num_voices = 1;
 	mixer->one_synth = synth1;
+	mixer->second_synth = synth2;
 	return (mixer);
 }
 
@@ -71,7 +72,7 @@ void	synth_to_mix_with_pitch(t_synth *synth, t_mixer *mixer)
 	while(i < FRAMES_PER_BUFFER)
 	{
 		int wt_idx = (int)(synth->phase * TABLE_SIZE) % TABLE_SIZE;
-		*buffer_ptr = synth->wavetable[wt_idx] * synth->amplitude;
+		*buffer_ptr += synth->wavetable[wt_idx] * synth->amplitude * (1.0f / (float) NUM_VOICES);
 		buffer_ptr++; 
 		synth->phase += synth->phaseIncrement;
 		if(synth->phase >= 1.0)
@@ -93,19 +94,17 @@ static int paCallback(const void *inputBuffer, void *outputBuffer,
 	out = (float*)outputBuffer;
 	i = 0;
 	memset(mixer->mixbuffer, 0, framesPerBuffer * sizeof(float));
-	while(i < NUM_VOICES)
-	{
-		synth_to_mix_with_pitch(mixer->one_synth, mixer);
-		i++;
-	}
+	synth_to_mix_with_pitch(mixer->one_synth, mixer);
+	synth_to_mix_with_pitch(mixer->second_synth, mixer);
 	memcpy(out, mixer->mixbuffer, framesPerBuffer * sizeof(float));
 	return (paContinue);
 }
 
 int	main(void)
 {
-	t_synth *synth1 = create_synth("square", note_to_freq("c4"), 0.5);
-	t_mixer *mixer = create_mixer(synth1);
+	t_synth *synth1 = create_synth("square");
+	t_synth	*synth2 = create_synth("sine");
+	t_mixer *mixer = create_mixer(synth1, synth2);
 
 
 	Pa_Initialize();
@@ -113,25 +112,21 @@ int	main(void)
 
 	Pa_OpenDefaultStream(&stream, 0, 1, paFloat32, SAMPLE_RATE, FRAMES_PER_BUFFER, paCallback, mixer);
 	Pa_StartStream(stream);
-	Pa_Sleep(1000);
-	set_note(synth1, "g3", 0.5);
-	Pa_Sleep(1000);
-	set_note(synth1, "c4", 0.5);
-	Pa_Sleep(1000);
-	set_note(synth1, "d4", 0.5);
-	Pa_Sleep(1000);
-	set_note(synth1, "e4", 0.5);
-	Pa_Sleep(1500);
-	set_note(synth1, "g4", 0.5);
+	set_note(synth1, "g3", 1);
 	Pa_Sleep(500);
-	set_note(synth1, "e4", 0.5);
-	Pa_Sleep(1000);
-	set_note(synth1, "d4", 0.5);
-	Pa_Sleep(1000);
+	set_note(synth2, "b3", 1);
+	Pa_Sleep(500);
+	set_note(synth1, "d3", 1);
+	Pa_Sleep(500);
+	set_note(synth2, "d4", 1);
+	Pa_Sleep(500);
+	set_note(synth2, "d4", 0);
+	Pa_Sleep(500);
 	Pa_StopStream(stream);
 	Pa_CloseStream(stream);
 	Pa_Terminate();
 	destroy_synth(synth1);
+	destroy_synth(synth2);
 	destroy_mixer(mixer);
 	return (0);
 }

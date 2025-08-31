@@ -12,7 +12,7 @@
 #define SAMPLE_RATE			48000
 #define FRAMES_PER_BUFFER	256
 #define TABLE_SIZE			2048
-#define NUM_VOICES			1
+#define NUM_VOICES			2
 
 typedef struct s_synth
 {
@@ -28,6 +28,7 @@ typedef struct s_mixer
 	float	*mixbuffer;
 	int		num_voices;
 	t_synth	*one_synth;
+	t_synth *second_synth;
 }	t_mixer;
 
 typedef struct s_ntof
