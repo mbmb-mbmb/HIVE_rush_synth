@@ -12,7 +12,7 @@
 #define SAMPLE_RATE			48000
 #define FRAMES_PER_BUFFER	256
 #define TABLE_SIZE			2048
-#define NUM_VOICES			2
+#define NUM_VOICES			4
 
 typedef struct s_synth
 {
@@ -38,5 +38,7 @@ typedef struct s_ntof
 
 void	set_note(t_synth *synth, char *note, double amplitude);
 double	note_to_freq(char *note);
+void	destroy_synth(t_synth *synth);
+void	destroy_synths_and_mixer(t_mixer *mixer);
 
 #endif
