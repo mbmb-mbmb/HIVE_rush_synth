@@ -40,8 +40,9 @@ t_synth	*create_synth(const char *waveform, double freq, double amplitude)
 	return (synth);
 }
 
-t_mixer	*create_mixer(t_mixer *mixer, t_synth *synth1)
+t_mixer	*create_mixer(t_synth *synth1)
 {
+	t_mixer	*mixer = malloc(sizeof(t_mixer));
 	mixer->mixbuffer = malloc(FRAMES_PER_BUFFER * sizeof(float));
 	mixer->num_voices = 1;
 	mixer->one_synth = synth1;
@@ -62,14 +63,16 @@ void	destroy_mixer(t_mixer *mixer)
 
 void	synth_to_mix_with_pitch(t_synth *synth, t_mixer *mixer)
 {
-	int	i;
+	int		i;
+	float	*buffer_ptr;
 
 	i = 0;
+	buffer_ptr = mixer->mixbuffer;
 	while(i < FRAMES_PER_BUFFER)
 	{
 		int wt_idx = (int)(synth->phase * TABLE_SIZE) % TABLE_SIZE;
-		*mixer->mixbuffer = synth->wavetable[wt_idx] * synth->amplitude;
-		mixer->mixbuffer++;
+		*buffer_ptr = synth->wavetable[wt_idx] * synth->amplitude;
+		buffer_ptr++; 
 		synth->phase += synth->phaseIncrement;
 		if(synth->phase >= 1.0)
 			synth->phase -= 1.0;
@@ -101,11 +104,10 @@ static int paCallback(const void *inputBuffer, void *outputBuffer,
 
 int	main(void)
 {
-	t_mixer	*mixer;
-	t_synth	*synth1;
+	t_synth *synth1 = create_synth("square", note_to_freq("c4"), 0.5);
+	t_mixer *mixer = create_mixer(synth1);
 
-	mixer = create_mixer(mixer, synth1);
-	synth1 = create_synth("sine", note_to_freq("c4"), 0.5);
+
 	Pa_Initialize();
 	PaStream	*stream;
 
