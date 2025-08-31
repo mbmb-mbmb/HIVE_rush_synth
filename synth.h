@@ -36,9 +36,11 @@ typedef struct s_ntof
 	double	freq;
 }	t_ntof;
 
-void	set_note(t_synth *synth, char *note, double amplitude);
 double	note_to_freq(char *note);
-void	destroy_synth(t_synth *synth);
-void	destroy_synths_and_mixer(t_mixer *mixer);
-
+void	set_note(t_synth *synth, char *note, double amplitude);
+t_mixer	*create_mixer(int num_voices);
+void	add_synth_to_mixer(t_mixer *mixer, t_synth *synth, int voice_index);
+void	choose_waveform(float *wavetable, const char *waveform);
+void	render_synth_to_buffer(t_synth *synth, t_mixer *mixer);
+void	destroy_mixer_and_synths(t_mixer *mixer);
 #endif

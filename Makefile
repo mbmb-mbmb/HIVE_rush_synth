@@ -11,7 +11,9 @@ else
 endif
 
 SRCS = synth.c \
-		set_note.c
+		set_note.c \
+		waveforms.c \
+		mixer.c
 
 OBJS = $(SRCS:.c=.o)
 
