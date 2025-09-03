@@ -59,11 +59,7 @@ static int paCallback(const void *inputBuffer, void *outputBuffer,
 	t_mixer	*mixer;
 	float	*out;
 	int		i;
-
-	(void)	inputBuffer;
-	(void)	timeInfo;
-	(void)	statusFlags;
-
+	
 	mixer = (t_mixer*)userData;
 	out = (float*)outputBuffer;
 	memset(mixer->mixbuffer, 0, framesPerBuffer * sizeof(float));
